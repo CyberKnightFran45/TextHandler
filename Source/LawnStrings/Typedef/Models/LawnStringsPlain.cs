@@ -39,7 +39,7 @@ str.Realloc(Math.Max(required, str.Length * 2) );
 
 // Section reader
 
-private static void ReadSections(Stream reader, LawnStringsEncoding encodeFlags, 
+private static void ReadSections(Stream reader, LawnStringsEncoding encodeFlags,
                                  Action<string> onHeader,
                                  Action<NativeString, int> onContent)
 {
@@ -49,7 +49,9 @@ int bufferSize = MemoryManager.GetBufferSize(reader);
 NativeString currentBlock = new(bufferSize);
 
 int blockLength = 0;
-bool hasContent = false;
+
+bool hasLine = false;
+bool hasText = false;
 
 bool usesBom = encodeFlags == LawnStringsEncoding.UTF8_BOM;
 
@@ -65,25 +67,32 @@ line.Trim();
 if(usesBom)
 {
 line.TrimStart(BOM);
+
 usesBom = false;
 }
+
+// [HEADER]
 
 if(line.Length > 0 && IsSectionHeader(line) )
 {
 
-if(blockLength > 0)
-{
+if(hasText)
 onContent(currentBlock, blockLength);
 
 blockLength = 0;
-hasContent = false;
-}
 
-onHeader(line);
+hasLine = false;
+hasText = false;
+
+string header = line.Substring(1, (int)(line.Length - 2) );
+onHeader(header);
+
 continue;
 }
 
-if(hasContent)
+// Content
+
+if(hasLine)
 {
 EnsureCapacity(ref currentBlock, blockLength + 1);
 
@@ -93,17 +102,22 @@ currentBlock[blockLength++] = '\n';
 EnsureCapacity(ref currentBlock, blockLength + line.Length);
 
 currentBlock.CopyFrom(line, blockLength);
-
 blockLength += (int)line.Length;
-hasContent = true;
+
+hasLine = true;
+
+if(line.Length > 0)
+hasText = true;
+
 }
 
-if(blockLength > 0)
+// Last block
+
+if(hasText)
 onContent(currentBlock, blockLength);
 
 currentBlock.Dispose();
 }
-
 
 // Read Lines from PlainText and add them to a List
 
