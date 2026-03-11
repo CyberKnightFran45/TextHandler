@@ -1,4 +1,3 @@
-using NetworkMgr;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -90,7 +89,7 @@ await DownloadAsync(HASH[serverType], outputDir);
 // Download All Files
 
 public static async Task DownloadFileAsync(string baseDir, LawnStringsResType res,
-LawnStringsServerType serverType)
+                                           LawnStringsServerType serverType)
 {
 TraceLogger.Init();
 TraceLogger.WriteLine("LawnStrings Download Started");
@@ -130,19 +129,20 @@ TraceLogger.WriteLine("LawnStrings Download Finished");
 // Get new Strings added in Server, by comparing Local file
 
 public static async Task GetUpdate(Stream target, Stream diff, LawnStringsServerType serverType,
-HashSet<string> excludeList = null)
+                                   HashSet<string> excludeList = null)
 {
 using ChunkedMemoryStream res = new();
 await DownloadAsync(SOURCE[serverType], res);
 
 var newStrs = LawnStringsPlain.FindAdded(target, res, default, excludeList);
+
 LawnStringsPlain.WriteKvp(diff, newStrs, default);
 }
 
 // Get new Strings
 
 public static async Task GetUpdate(string inputPath, LawnStringsServerType serverType,
-HashSet<string> excludeList = null)
+                                   HashSet<string> excludeList = null)
 {
 TraceLogger.Init();
 TraceLogger.WriteLine("LawnStrings: Update Check Started");
