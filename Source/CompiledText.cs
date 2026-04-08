@@ -36,7 +36,7 @@ TraceLogger.WriteLine("Step #3 - Encode Base64:");
 TraceLogger.WriteLine();
 
 TraceLogger.WriteActionStart("Encoding data...");
-Base64.EncodeStream(encryptedStream, output, false);
+Base64.EncodeStream(encryptedStream, output, true);
 
 TraceLogger.WriteActionEnd();
 }	
@@ -91,7 +91,7 @@ using ChunkedMemoryStream encryptedStream = new(cryptoChunks);
 
 TraceLogger.WriteActionStart("Decoding data...");
 
-Base64.DecodeStream(input, encryptedStream, false);
+Base64.DecodeStream(input, encryptedStream, true);
 encryptedStream.Seek(0, SeekOrigin.Begin);
 
 TraceLogger.WriteActionEnd();
