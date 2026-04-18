@@ -11,8 +11,11 @@ public static partial class LawnStringsHelper
 {
 // Encode RTON
 
-internal static void EncodeRton(Stream input, Stream output)
+internal static void EncodeRton(Stream input, Stream output, bool silent = false)
 {
+
+if(!silent)
+TraceLogger.WriteLine("• RTON encode started:");
 
 if(input.Position > 0 && input.CanSeek)
 input.Seek(0, SeekOrigin.Begin);
@@ -22,15 +25,22 @@ RtonParser.EncodeStream(input, output);
 
 // Decode RTON
 
-internal static void DecodeRton(Stream input, Stream output) => RtonParser.DecodeStream(input, output);
+internal static void DecodeRton(Stream input, Stream output, bool silent = false)
+{
+
+if(!silent)
+TraceLogger.WriteLine("• RTON decode started:");
+
+RtonParser.DecodeStream(input, output);
+}
 
 // Decode RTON (ram)
 
-internal static ChunkedMemoryStream DecodeRton(Stream input)
+internal static ChunkedMemoryStream DecodeRton(Stream input, bool silent = false)
 {
 ChunkedMemoryStream jsonStream = new();
 
-DecodeRton(input, jsonStream);
+DecodeRton(input, jsonStream, silent);
 jsonStream.Seek(0, SeekOrigin.Begin);
 
 return jsonStream;
@@ -178,10 +188,10 @@ internal static void LoadRtons(Stream a, Stream b,
 TraceLogger.WriteLine("RTON load started:");
 
 TraceLogger.WriteLine("• Decode old stream");
-jsonA = DecodeRton(a);
+jsonA = DecodeRton(a, true);
 
 TraceLogger.WriteLine("• Decode new stream");
-jsonB = DecodeRton(b);
+jsonB = DecodeRton(b, true);
 }
 
 // Save plaintext
