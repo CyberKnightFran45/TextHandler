@@ -44,7 +44,7 @@ private static void DebugStrLoad(int count) => TraceLogger.WriteInfo($"Strings l
 
 private static void DebugStrLoad(int countA, int countB)
 {
-TraceLogger.WriteInfo($"Strings loaded: {countA} (old) - {countB} (new)");
+TraceLogger.WriteInfo($"Strings loaded: {countA} (old) | {countB} (new)");
 }
 
 // Log strings diff
