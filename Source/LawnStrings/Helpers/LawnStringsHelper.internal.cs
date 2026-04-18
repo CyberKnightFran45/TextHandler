@@ -15,7 +15,10 @@ internal static void EncodeRton(Stream input, Stream output, bool silent = false
 {
 
 if(!silent)
+{
 TraceLogger.WriteLine("• RTON encode started:");
+TraceLogger.WriteLine();
+}
 
 if(input.Position > 0 && input.CanSeek)
 input.Seek(0, SeekOrigin.Begin);
@@ -29,7 +32,10 @@ internal static void DecodeRton(Stream input, Stream output, bool silent = false
 {
 
 if(!silent)
+{
 TraceLogger.WriteLine("• RTON decode started:");
+TraceLogger.WriteLine();
+}
 
 RtonParser.DecodeStream(input, output);
 }
