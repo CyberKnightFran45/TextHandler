@@ -7,18 +7,6 @@ namespace TextHandler.LawnStrings
 
 public static partial class LawnStringsComparer
 {
-// Compare plaintext
-
-private static IEnumerable<KeyValuePair<string, string>> GetDiff(Stream a, Stream b,
-                                                                 LawnStringsCompareMode mode,
-																 LawnStringsEncoding encoding,
-									                             HashSet<string> excludeList)
-{
-LawnStringsHelper.LoadTxts(a, b, encoding, out var dictA, out var dictB);
-
-return GetDiff(dictA, dictB, mode, excludeList);
-}
-
 // Compare PlainText
 
 private static void CompareTxt(Stream a, Stream b, Stream diff,
@@ -26,8 +14,10 @@ private static void CompareTxt(Stream a, Stream b, Stream diff,
                                LawnStringsEncoding encodeFlags,
 							   HashSet<string> excludeList)
 {
+LawnStringsHelper.LoadTxts(a, b, encodeFlags, out var dictA, out var dictB);
+
 TraceLogger.WriteActionStart("Comparing text...");
-var result = GetDiff(a, b, compareMode, encodeFlags, excludeList);
+var result = GetDiff(dictA, dictB, compareMode, excludeList);
 
 TraceLogger.WriteActionEnd();
 
